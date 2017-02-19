@@ -12,6 +12,6 @@ public class ShowPlayerStats : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        mText.text = string.Format("Water {0}", GM.GetPlayer(0).Water);
+		mText.text = string.Format("Water {0}\nFood {1}", GM.GetPlayer(0).Water,GM.GetPlayer(0).Food);
 	}
 }
