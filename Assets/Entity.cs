@@ -20,6 +20,7 @@ public class Entity : MonoBehaviour {
     }
 
     protected virtual void Start () {
+        GM.DebugMsg(GetType().Name + " Started");
 	}
 
     public  virtual    EType Type {     //get Type of Enity
@@ -39,7 +40,7 @@ public class Entity : MonoBehaviour {
 
     //Wrapper for collsion
     void OnCollisionEnter(Collision vCollision) {
-        Entity tCCOther = vCollision.gameObject.GetComponent<Entity>();
+        Entity tCCOther = vCollision.gameObject.GetComponent<Entity>(); //Find collided with Entity
         if(tCCOther!=null) {
             Collision(tCCOther, false);
         } else {

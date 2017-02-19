@@ -21,6 +21,8 @@ public class GM : Singleton {
         }
     }
 
+
+
     static  public  void AddPlayer(PlayerController vPC) {
         if(sGM.mPlayer.Contains(vPC)) {
             DebugMsg("AddPlayer Error" + vPC.ToString() + " not in player list");
@@ -45,10 +47,20 @@ public class GM : Singleton {
         return null;
     }
 
+    string mDebugText="hello";
 
+    void    ClearDebugText() {
+        mDebugText = "";
+    }
+ 
     static public string DebugText {
         get {
-            return "None yet";
+            return sGM.mDebugText;
+        }
+
+        set {
+            sGM.mDebugText = value;
+            sGM.Invoke("ClearDebugText",3f);
         }
     }
 }

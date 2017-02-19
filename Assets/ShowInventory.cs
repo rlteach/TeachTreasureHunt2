@@ -7,33 +7,44 @@ public class ShowInventory : MonoBehaviour {
 
     public  GameObject InventoryPrefab;
 
-    List<GameObject> mInventoryButtons=new List<GameObject>();      //List of buttons
+    readonly int ItemCount = 10;
 
+    GameObject[]    mButtonGO;
+
+    float tUpdateTicker = 0;
+        
     void Start() {
-        for(int tI=0;tI<10;tI++) {
-            GameObject tGO = Instantiate(InventoryPrefab);
-            mInventoryButtons.Add(tGO);    //Make 10 buttons ready to display
-            tGO.transform.SetParent(transform);     //Parent to Panel
-//            tGO.SetActive(false);       //Don't show yet
+        mButtonGO = new GameObject[ItemCount];
+        for (int tI=0;tI< ItemCount; tI++) {
+            mButtonGO[tI] = Instantiate(InventoryPrefab);       //Create Buttons to use later
+            mButtonGO[tI].transform.SetParent(transform);     //Parent to Panel
+            mButtonGO[tI].SetActive(false);       //Don't show yet
         }
     }
 
     // Update is called once per frame
     void Update () {
-        PlayerController tPC = GM.GetPlayer(0);
-		int	tIndex = 0;
-        foreach (Transform child in transform) {
-			Text	tText = child.gameObject.GetComponentInChildren<Text> ();	//Get Text for button
-			if (tIndex < tPC.Inventory.Count) {
-				tText.text = tPC.Inventory [tIndex].Name;
-				child.gameObject.SetActive (true);
-			} else {
-				tText.text = "Blank";
-			}
+        if (tUpdateTicker > 0) {
+            tUpdateTicker -= Time.deltaTime;
+        } else {
+            Show();     //Only redisplay Inventory every half second, as its expensive
+            tUpdateTicker = 0.5f;
         }
-            if (tPC!=null) {
-            foreach(var tPickup in tPC.Inventory) {
+    }
 
+    void    Show() {
+        PlayerController tPC = GM.GetPlayer(0);         //This is for player 1
+        for (int tIndex = 0; tIndex < transform.childCount; tIndex++) {     //Step through the inventory slots
+            ProcessButton tPB = mButtonGO[tIndex].GetComponent<ProcessButton>();        //Get the button
+            Text tText = mButtonGO[tIndex].GetComponentInChildren<Text>();      //Get the text to label it from Item
+            if (tIndex < tPC.Inventory.Count) {         //Do we have an item in that slot?
+                tPB.PC = tPC;       //Link Button to Player
+                tPB.OnClick = tPC.Inventory[tIndex].UseItem;            //Link the button code to get processed by Item
+                tText.text = tPC.Inventory[tIndex].ToString();      //Label button
+                mButtonGO[tIndex].SetActive(true);          //Show it
+            } else {
+                mButtonGO[tIndex].SetActive(false);     //Don't show if no item in that slot
+                tText.text = "Blank:" + tIndex;       //Debug show placeholder
             }
         }
     }
