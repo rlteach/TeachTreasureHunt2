@@ -21,8 +21,15 @@ public class ShowInventory : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         PlayerController tPC = GM.GetPlayer(0);
+		int	tIndex = 0;
         foreach (Transform child in transform) {
-
+			Text	tText = child.gameObject.GetComponentInChildren<Text> ();	//Get Text for button
+			if (tIndex < tPC.Inventory.Count) {
+				tText.text = tPC.Inventory [tIndex].Name;
+				child.gameObject.SetActive (true);
+			} else {
+				tText.text = "Blank";
+			}
         }
             if (tPC!=null) {
             foreach(var tPickup in tPC.Inventory) {
