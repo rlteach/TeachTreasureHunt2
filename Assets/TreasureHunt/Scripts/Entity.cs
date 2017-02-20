@@ -52,7 +52,7 @@ public class Entity : MonoBehaviour {
     void OnTriggerEnter(Collider vCollider) {
         Entity tCCOther = vCollider.gameObject.GetComponent<Entity>();
         if (tCCOther != null) {
-            Collision(tCCOther, false);       //Pass collision on
+            Collision(tCCOther, true);       //Pass collision on
         } else {
             NonEntityCollisionError(vCollider.gameObject);
         }
@@ -70,4 +70,10 @@ public class Entity : MonoBehaviour {
     void OnDestroy() {
         GM.Msg(gameObject.name + " about to be destroyed");
     }
+
+	//Default destroy
+	public	virtual	void	Die() {
+		Destroy (gameObject);
+	}
+
 }

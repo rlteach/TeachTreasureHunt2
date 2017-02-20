@@ -1,49 +1,53 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
 
+
+//Deals with GameObject collision 
 public class PickupController : Entity {
 
-    public  enum PickupTypes {
-        Water=0
-        ,Food
-    }
+	public	enum PickupTypes {		//Type of this pickup
+		Water
+		,Food
+	}
 
-    Pickup mPickupItem;
+	[Header("Choose pickup type")]
+	public	PickupTypes	PickupType;		//Allow choice of pickup type in inspector
 
-    public PickupTypes PickupType;
+	// Use this for initialization
+	protected override	void Start () {
+		base.Start ();		//Call base class, to set up Entity	
+	}
 
-    protected override void Start() {
-        base.Start();
-        mPickupItem=MakePickup();
-    }
+	public override EType Type {     //get Type of Enity
+		get {
+			return EType.Pickup;
+		}
+	}
 
-    private Pickup  MakePickup() {          //Creates a pickup from a list of items
-        switch(PickupType) {
-            case PickupTypes.Water:
-                return CreatePickup<WaterPickup>();     //Create specified item
-            case PickupTypes.Food:
-                return CreatePickup<FoodPickup>();
-        }
-        return null;
-    }
 
-    private T CreatePickup<T>() where T:Pickup,new() {      //Make a Pickup Item up on the fly
-        return new T();
-    }
+	//Create new object for Modifier list
+	Pickup	CreatePickup() {
+		switch(PickupType) {
+		case	PickupTypes.Water:
+			return	new WaterPickup ();		//Create Water Pickup
+		case	PickupTypes.Food:
+			return	new FoodPickup ();		//Create Food Pickup
+		}
 
-    public override EType Type {     //get Type of Enity, can by used instead of tags
-        get {
-            return EType.Pickup;        //Pickup Item
-        }
-    }
+		return	null;
+	}
 
-    public  Pickup    PickupItem(PlayerController vPC) {
-        bool tShouldPickup = mPickupItem.PickUpItem(vPC);
-        if( tShouldPickup) {
-            Destroy(gameObject);        //get rid of it
-            return mPickupItem;     //Pickup allowed return item 
-        }
-        return   null;      //Pickup not allowed
-    }
+
+	//Deal with collisions
+	protected   override void    Collision(Entity vOther,bool vIsTrigger) {
+		if (vOther.Type == EType.Player) {		//If colliding with player
+			PlayerController	tPC = GM.GetPlayer (0);
+			if (tPC != null) {
+				Pickup tPickup=CreatePickup();		//Create Pickup modifer
+				if (tPC.AcceptPickup (tPickup)) {		//Ask player to accept it
+					Die ();		//If accepted kill GameObject
+				}
+			}
+		}
+	}
 }

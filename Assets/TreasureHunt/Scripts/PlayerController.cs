@@ -7,15 +7,12 @@ using System;
 
 public class PlayerController : Entity {
 
+	#region Stats
 	int mWater=3;
 	int mFood = 3;
-
-
 	bool	mDead=false;
 
-	float	mConsumeTick=0f;
-
-	public	bool	Dead {
+	public	bool	Dead {		//Setter to deal with Dead flag, prints message to console on death
 		get {
 			return	mDead;
 		}
@@ -27,7 +24,7 @@ public class PlayerController : Entity {
 		}
 	}
 
-	public int Water {
+	public int Water {		//Setter to deal with Water, will not allow it to go below 0 and trigger death
 		get {
 			return	mWater;
 		}
@@ -40,7 +37,7 @@ public class PlayerController : Entity {
 		}
 	}
 
-	public int Food {
+	public int Food {		//Setter to deal with Food, will not allow it to go below 0 and trigger death
 		get {
 			return	mFood;
 		}
@@ -52,51 +49,54 @@ public class PlayerController : Entity {
 			}
 		}
 	}
+	#endregion
 
-    //Set the speed of movement in inspector;
-    public float MoveSpeed=10f;
+	#region PlayerModifiers
 
-    CharacterController mCC;
+	List<Pickup>	mModifiers=new List<Pickup>();		//List of modifiers applied to player
 
-    Vector3 mMoveDirection = Vector3.zero;
 
-    List<Pickup> mPickups = new List<Pickup>();     //List of stuff player has picked up
 
-    public override EType Type {     //get Type of Enity
-        get {
-            return EType.Player;
-        }
-    }
-
-    public List<Pickup> Inventory {       //Expose Pickup list
-        get {
-            return mPickups;
-        }
-    }
-
-    protected override  void Start () {
-        base.Start();       //Process base class Startup
-        mCC = GetComponent<CharacterController>();
-        GM.AddPlayer(this);     //Add to player list
+	public	bool	AcceptPickup(Pickup vPickup) {		//Add a new modifier to player
+		mModifiers.Add (vPickup);
+		GM.DebugText=PickupItems ();
+		return	true;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        MoveCharacter();
-		Consume (1f);
-    }
 
-	void	Consume(float vSpeed) {
-		if (mConsumeTick < 5f) {
-			mConsumeTick +=Time.deltaTime*vSpeed;
-		} else {
-			Food--;
-			Water--;
-			mConsumeTick = 0;
+	public	string	PickupItems() {					//Get string with current modifiers
+		string	tDebug = "";
+		foreach (var tM in mModifiers) {
+			tDebug += tM.Name + "\n";
+		}
+		return	tDebug;
+	}
+
+	void	ProcessModifiers() {					//Process all modifiers attached to player
+		List<Pickup>	tToDelete = new List<Pickup> ();		//Keep a list of ones to delete, needed as you cannot deleter items from list while iterating it
+		foreach (var tM in mModifiers) {
+			tM.UpdatePlayer (this,Time.deltaTime);		//Ask modifer to apply its effect
+			if (tM.Delete) {		//If modifier sets Delete flag, schedule its deletion, by adding to Delete List
+				tToDelete.Add (tM);
+			}
+		}
+		foreach (var tM in tToDelete) {		//Delete all the modifers which were marked for deletion, using delete list
+			mModifiers.Remove (tM);
 		}
 	}
 
-    void MoveCharacter() {          //Move Character with controller
+
+	#endregion
+
+
+	#region Movement
+	//Set the speed of movement in inspector;
+	public float MoveSpeed=10f;
+
+	CharacterController mCC;
+
+	Vector3 mMoveDirection = Vector3.zero;
+
+	void MoveCharacter() {          //Move Character with controller
 		if (!Dead) {
 			if (mCC.isGrounded) {
 				transform.Rotate (0, IC.GetInput (IC.Directions.MoveX), 0);
@@ -107,37 +107,43 @@ public class PlayerController : Entity {
 				mMoveDirection *= MoveSpeed;
 				if (IC.GetInput (IC.Directions.Jump) > 0f) {
 					mMoveDirection.y = 10f;        //Jump
-					Consume (3f);
 				}
 			}
 			mMoveDirection.y += Physics.gravity.y * Time.deltaTime;
 			mCC.Move (mMoveDirection * Time.deltaTime);
 		}
-    }
+	}
 
-    protected override void Collision(Entity vOther, bool vIsTrigger) {     //This means Player collided
-        if(vOther.Type==EType.Pickup) {
-            PickupObject(vOther);
+	#endregion
+
+
+	#region Housekeeping
+
+	protected override  void Start () {
+		base.Start();       //Process base class Startup
+		mCC = GetComponent<CharacterController>();
+		GM.AddPlayer(this);     //Add to player list
+	}
+
+	// Update is called once per frame
+	void Update () {
+		ProcessModifiers ();		//Apply modifiers to player
+		MoveCharacter();			//Move player
+	}
+    public override EType Type {     //get Type of Enity
+        get {
+            return EType.Player;
         }
     }
+	#endregion
 
-    void PickupObject(Entity vOther) {
-        if (vOther.GetType().IsAssignableFrom(typeof(PickupController))) {       //Check if its the right type
-            PickupController tPickupController = (PickupController)vOther;      //We know its a pickup so this gives us access to its code
-            Pickup  tPickup= tPickupController.PickupItem(this);
-            if(tPickup!=null) {     //If pickup not allowed this is null
-                Inventory.Add(tPickup);    //Add the pickup Item to inventory
-            }
-        }
-    }
 
-    public  int CountInventory<T>() where T : Pickup {
-        int tCount = 0;
-        foreach (var tP in Inventory) {
-            if(tP.GetType()==typeof(T)) {
-                tCount++;
-            }
-        }
-        return tCount;
-    }
+	#region Interaction
+	protected override void Collision(Entity vOther, bool vIsTrigger) {     //This means Player collided
+		if(vOther.Type==EType.Pickup) {
+			GM.DebugMsg ("Player Collided with " + vOther.name);
+		}
+	}
+	#endregion
+
 }

@@ -1,31 +1,28 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 
 public class FoodPickup : Pickup {
 
+	float	mTime;
 
-    int Value = 15;
+	int		mCount=10;
 
+	//Food is added over 10 seconds
+	public	override	void	UpdatePlayer(PlayerController tPlayer,float tTime) {
+		if (mTime >= 1f) {
+			mTime = 0;
+			tPlayer.Food += 1;
+			mCount--;
+			if (mCount <= 0)
+				Delete = true;
+		} else {
+			mTime += tTime;
+		}
+	}
 
-    public FoodPickup() {
-        Name = "Food";
-     }
-
-    public override string ToString() {
-        return string.Format("{0} {1}", Value,Name);
-    }
-
-    public override bool PickUpItem(PlayerController vPC) {       //Get Specific effect
-        bool tAllowed = (vPC.CountInventory<FoodPickup>() < 3);
-        if(!tAllowed) {
-            GM.DebugText = "Only allowed 3 food";
-        }
-        return (tAllowed);        //Can only carry 3 food
-    }
-
-    public override void UseItem(PlayerController vPC) {             //Implement effects on player
-        vPC.Food += Value;        //Add 10 to players water
-        vPC.Water -= 1;     //Eating makes you thirsty
-        vPC.Inventory.Remove(this);     //Delete after use
-    }
-
+	public override string Name {
+		get {
+			return	"Food";
+		}
+	}
 }

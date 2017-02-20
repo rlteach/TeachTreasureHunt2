@@ -12,6 +12,7 @@ public class GM : Singleton {
 
 	void Awake () {
 		if (CreateSingleton (ref sGM)) {
+			
 		}
 	}
 
@@ -22,7 +23,7 @@ public class GM : Singleton {
     }
 
 
-
+	//Add player to list of players
     static  public  void AddPlayer(PlayerController vPC) {
         if(sGM.mPlayer.Contains(vPC)) {
             DebugMsg("AddPlayer Error" + vPC.ToString() + " not in player list");
@@ -31,6 +32,7 @@ public class GM : Singleton {
         sGM.mPlayer.Add(vPC);   //Add player
     }
 
+	//Remove player to list of players
     static public void RemovePlayer(PlayerController vPC) {
         if (sGM.mPlayer.Contains(vPC)) {
             sGM.mPlayer.Remove(vPC);   //Remove player
@@ -39,6 +41,7 @@ public class GM : Singleton {
         DebugMsg("RemovePlayer Error" + vPC.ToString() + " not in player list");
     }
 
+	//Get player by index
     static public PlayerController GetPlayer(int vIndex) {
         if (vIndex<sGM.mPlayer.Count) {
             return sGM.mPlayer[vIndex];

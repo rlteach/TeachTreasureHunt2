@@ -1,36 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections;
 
-abstract public class Pickup  {
 
-    string mPickupName;       //Name of Object
+//Base class for Pickups, does not need to inherit Monobehaviour
+//Used as template for Pickup behaviour
+abstract	public class Pickup  {
 
-    private Pickup mPickup;     //Reference for this Pickup object
+	public	bool	Delete=false;		//If set, is scheduled for deletion
 
-    public  string    Name {
-        get {                   //Allow everyone to read it
-            return mPickupName;
-        }
-        protected   set {       //Only allow derived classes to change it
-            mPickupName = value;
-        }
-    }
+	public	abstract	void	UpdatePlayer (PlayerController tPlayer,float tTime);	//Used by player to ask Pickup to modify player
 
-    //Allow access to Pickup Item
-    public  Pickup  PickupItem {
-        get {
-            return mPickup;
-        }
-        protected   set {
-            mPickup = value;
-        }
-    }
+	public	abstract	string	Name { get; }		//Get the name of this pickup
 
-    public virtual bool PickUpItem(PlayerController vPC) {       //Implement pickup effect on player, return true if this should be added to inventory
-        GM.DebugMsg("PickUpItem:" + Name);
-        return true;
-    }
-    public virtual  void UseItem(PlayerController vPC) {             //Implement effects on player
-        GM.DebugMsg("Use Item:" + Name);
-    }
 }
