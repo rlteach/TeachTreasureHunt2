@@ -8,6 +8,7 @@ public class PickupController : Entity {
 	public	enum PickupTypes {		//Type of this pickup
 		Water
 		,Food
+		,Lava
 	}
 
 	[Header("Choose pickup type")]
@@ -32,6 +33,8 @@ public class PickupController : Entity {
 			return	new WaterPickup ();		//Create Water Pickup
 		case	PickupTypes.Food:
 			return	new FoodPickup ();		//Create Food Pickup
+		case	PickupTypes.Lava:
+			return	new LavaPickup ();		//Create Lava Pickup
 		}
 
 		return	null;

@@ -12,6 +12,22 @@ public class PlayerController : Entity {
 	int mFood = 3;
 	bool	mDead=false;
 
+
+	float	mJumpHeight=10f;
+
+	public	float	JumpHeight {
+		set {
+			if (value > 0f && value < 30f) {
+				mJumpHeight = value;
+			} else {
+				mJumpHeight = 10f;
+			}
+		}
+		get {
+			return	mJumpHeight;
+		}
+	}
+
 	public	bool	Dead {		//Setter to deal with Dead flag, prints message to console on death
 		get {
 			return	mDead;
@@ -106,7 +122,7 @@ public class PlayerController : Entity {
 				mMoveDirection = transform.TransformDirection (mMoveDirection);      //Move in direction character is facing
 				mMoveDirection *= MoveSpeed;
 				if (IC.GetInput (IC.Directions.Jump) > 0f) {
-					mMoveDirection.y = 10f;        //Jump
+					mMoveDirection.y = mJumpHeight;        //Jump
 				}
 			}
 			mMoveDirection.y += Physics.gravity.y * Time.deltaTime;
