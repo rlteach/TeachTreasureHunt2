@@ -26,7 +26,7 @@ public class PlayerDebugDisplay : MonoBehaviour {
 	void Update () {
         if(PC!=null) {
             StringBuilder tSB = new StringBuilder();
-            tSB.Append(string.Format("{0:f2} {1}\n", PC.name, (PC.isLocalPlayer) ? "Local" : "Remote"));
+            tSB.Append(string.Format("{0:f2}\n", PC.name));
 
             foreach (Pickup tP in PC.Modifiers) {
                 tSB.Append(tP.Name);

@@ -26,8 +26,8 @@ public class PickupController : Entity {
 	}
 
 
-	//Create new object for Modifier list
-	Pickup	CreatePickup() {
+    //Create new object for Modifier list
+    Pickup CreatePickup() {
 		switch(PickupType) {
 		case	PickupTypes.Water:
 			return	new WaterPickup ();		//Create Water Pickup
@@ -36,21 +36,20 @@ public class PickupController : Entity {
 		case	PickupTypes.Lava:
 			return	new LavaPickup ();		//Create Lava Pickup
 		}
-
 		return	null;
 	}
 
 
 	//Deal with collisions
 	protected   override void    Collision(Entity vOther,bool vIsTrigger) {
-		if (vOther.Type == EType.Player) {		//If colliding with player
-			PlayerController	tPC = GM.GetPlayer (0);
-			if (tPC != null) {
-				Pickup tPickup=CreatePickup();		//Create Pickup modifer
-				if (tPC.AcceptPickup (tPickup)) {		//Ask player to accept it
-					Die ();		//If accepted kill GameObject
-				}
-			}
-		}
+        if (vOther.Type == EType.Player) {      //If colliding with player
+            PlayerController tPC = vOther.GetComponent<PlayerController>();
+            if (tPC != null) {
+                Pickup tPickup = CreatePickup();        //Create Pickup modifer
+                if (tPC.AcceptPickup(tPickup)) {        //Ask player to accept it
+                    Die();      //If accepted kill GameObject
+                }
+            }
+        }
 	}
 }

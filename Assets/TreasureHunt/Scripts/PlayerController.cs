@@ -71,11 +71,15 @@ public class PlayerController : Entity {
 
 	List<Pickup>	mModifiers=new List<Pickup>();		//List of modifiers applied to player
 
+
+
     public List<Pickup> Modifiers {
         get {
             return mModifiers;
         }
     }
+
+
 
     public	bool	AcceptPickup(Pickup vPickup) {		//Add a new modifier to player
 		mModifiers.Add (vPickup);
@@ -136,14 +140,15 @@ public class PlayerController : Entity {
         }
     }
 
-	#endregion
+    #endregion
 
 
-	#region Housekeeping
+    #region Housekeeping
 
-	protected override  void Start () {
+    protected override  void Start () {
 		base.Start();       //Process base class Startup
-		mCC = GetComponent<CharacterController>();
+        name=(isLocalPlayer)?"Local Player":"Remote Player";
+        mCC = GetComponent<CharacterController>();
 		GM.AddPlayer(this);     //Add to player list
 	}
 

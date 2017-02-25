@@ -92,13 +92,26 @@ public class GM : Singleton {       //Derive from Singleton, makes a global stat
     }
     #endregion
 
-    #region Helpers
-    static  public  bool IsLast(List<System.Object> vList, System.Object vObject) {   //Check if item is last in list
-        if(vList.Count>1) {     //List needs to be bigger than 1, or its always the last
-            return vList[vList.Count - 1] == vObject;
+    #region Landscape
+
+    Terrain mTerrain;
+
+    public  static Terrain Terrain {
+        get {
+            if (sGM != null) {
+                if(sGM.mTerrain!=null) {
+                    return sGM.mTerrain;        //Return Cached version
+                }
+                sGM.mTerrain = FindObjectOfType<Terrain>();     //If not cached find it
+                return sGM.mTerrain;
+            }
+            return null;
         }
-        return false;
     }
+    #endregion
+
+
+    #region Helpers
 
     #endregion
 
