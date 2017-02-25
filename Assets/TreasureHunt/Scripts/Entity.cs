@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Networking;
+
 
 //Collsion controller base class, abstracts Unity Collsion behaviour
 //Processes triggers and colliders
@@ -9,7 +11,7 @@ using System;
 //Makes sure this component is present as its needed by the script
 //[RequireComponent(typeof(Rigidbody))]
 
-public class Entity : MonoBehaviour {
+public class Entity : NetworkBehaviour {
 
     //Get References to most used components
 
@@ -67,7 +69,7 @@ public class Entity : MonoBehaviour {
         }
     }
 
-    void OnDestroy() {
+    protected  virtual  void OnDestroy() {
         GM.Msg(gameObject.name + " about to be destroyed");
     }
 

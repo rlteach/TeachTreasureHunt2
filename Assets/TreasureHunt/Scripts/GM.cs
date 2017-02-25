@@ -76,6 +76,15 @@ public class GM : Singleton {       //Derive from Singleton, makes a global stat
         }
     }
 
+    static public PlayerController LocalPlayer {
+        get {
+            if(sGM!=null && sGM.mPlayer!=null) {
+                return  sGM.mPlayer.Find(tPC => tPC.isLocalPlayer);
+            }
+            return null;
+        }
+    }
+
     static public int PlayerCount {
         get {
             return sGM.mPlayer.Count;

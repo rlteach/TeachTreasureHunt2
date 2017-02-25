@@ -4,16 +4,20 @@ using UnityEngine.UI;
 
 public class ShowPlayerStats : MonoBehaviour {
 
-	public	int Player=0;
 
     Text    mText;
+    PlayerController mPC;
+
+
 	// Use this for initialization
 	void Start () {
-        mText = GetComponent<Text>();
+        mText = GetComponentInChildren<Text>();
+        mPC = transform.parent.GetComponent<PlayerController>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		mText.text = string.Format("Water {0}\nFood {1}", GM.GetPlayer(Player).Water,GM.GetPlayer(Player).Food);
+       transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
+        mText.text = (mPC.isLocalPlayer) ? "Local" : "Remote";
 	}
 }

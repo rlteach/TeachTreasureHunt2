@@ -24,17 +24,21 @@ public class PlayerDebugDisplay : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        StringBuilder tSB = new StringBuilder();
-        tSB.Append(string.Format("{0:f2}\n",PC.name));
+        if(PC!=null) {
+            StringBuilder tSB = new StringBuilder();
+            tSB.Append(string.Format("{0:f2} {1}\n", PC.name, (PC.isLocalPlayer) ? "Local" : "Remote"));
 
-        foreach(Pickup tP in PC.Modifiers) {
-            tSB.Append(tP.Name);
-            if(PC.Modifiers.Count>1) {      //Only add newline if not last
-                if(tP!=PC.Modifiers[PC.Modifiers.Count-1]) {
-                    tSB.Append("\n");
+            foreach (Pickup tP in PC.Modifiers) {
+                tSB.Append(tP.Name);
+                if (PC.Modifiers.Count > 1) {      //Only add newline if not last
+                    if (tP != PC.Modifiers[PC.Modifiers.Count - 1]) {
+                        tSB.Append("\n");
+                    }
                 }
             }
+            mText.text = tSB.ToString();
+        } else {
+            mText.text = "Deleted";
         }
-        mText.text = tSB.ToString();
     }
 }

@@ -117,22 +117,24 @@ public class PlayerController : Entity {
 	Vector3 mMoveDirection = Vector3.zero;
 
 	void MoveCharacter() {          //Move Character with controller
-		if (!Dead) {
-			if (mCC.isGrounded) {
-				transform.Rotate (0, IC.GetInput (IC.Directions.MoveX), 0);
-				mMoveDirection.x = 0f;
-				mMoveDirection.y = 0f;
-				mMoveDirection.z = IC.GetInput (IC.Directions.MoveY);
-				mMoveDirection = transform.TransformDirection (mMoveDirection);      //Move in direction character is facing
-				mMoveDirection *= MoveSpeed;
-				if (IC.GetInput (IC.Directions.Jump) > 0f) {
-					mMoveDirection.y = mJumpHeight;        //Jump
-				}
-			}
-			mMoveDirection.y += Physics.gravity.y * Time.deltaTime;
-			mCC.Move (mMoveDirection * Time.deltaTime);
-		}
-	}
+        if(isLocalPlayer) {
+            if (!Dead) {
+                if (mCC.isGrounded) {
+                    transform.Rotate(0, IC.GetInput(IC.Directions.MoveX), 0);
+                    mMoveDirection.x = 0f;
+                    mMoveDirection.y = 0f;
+                    mMoveDirection.z = IC.GetInput(IC.Directions.MoveY);
+                    mMoveDirection = transform.TransformDirection(mMoveDirection);      //Move in direction character is facing
+                    mMoveDirection *= MoveSpeed;
+                    if (IC.GetInput(IC.Directions.Jump) > 0f) {
+                        mMoveDirection.y = mJumpHeight;        //Jump
+                    }
+                }
+                mMoveDirection.y += Physics.gravity.y * Time.deltaTime;
+                mCC.Move(mMoveDirection * Time.deltaTime);
+            }
+        }
+    }
 
 	#endregion
 
@@ -155,11 +157,14 @@ public class PlayerController : Entity {
             return EType.Player;
         }
     }
-	#endregion
+    protected override void OnDestroy() {
+        GM.RemovePlayer(this);      //Tell GM to remove us
+        GM.Msg(gameObject.name + " Player about to be destroyed");
+    }
 
-
-	#region Interaction
-	protected override void Collision(Entity vOther, bool vIsTrigger) {     //This means Player collided
+    #endregion
+    #region Interaction
+    protected override void Collision(Entity vOther, bool vIsTrigger) {     //This means Player collided
 		if(vOther.Type==EType.Pickup) {
 			GM.DebugMsg ("Player Collided with " + vOther.name);
 		}
