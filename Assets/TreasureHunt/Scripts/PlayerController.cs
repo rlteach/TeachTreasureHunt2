@@ -71,9 +71,13 @@ public class PlayerController : Entity {
 
 	List<Pickup>	mModifiers=new List<Pickup>();		//List of modifiers applied to player
 
+    public List<Pickup> Modifiers {
+        get {
+            return mModifiers;
+        }
+    }
 
-
-	public	bool	AcceptPickup(Pickup vPickup) {		//Add a new modifier to player
+    public	bool	AcceptPickup(Pickup vPickup) {		//Add a new modifier to player
 		mModifiers.Add (vPickup);
 		GM.DebugText=PickupItems ();
 		return	true;

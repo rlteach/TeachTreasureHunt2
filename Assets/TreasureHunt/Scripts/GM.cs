@@ -2,37 +2,57 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GM : Singleton {
+public class GM : Singleton {       //Derive from Singleton, makes a global static
 
-    public static   bool DebugOn = true;
+    #region Debug
+    //Sets global debug output flag, true means show messages
+    public static bool DebugOn = true;
 
-	private	static	GM	sGM;        //Used to keep singleton reference
+    string mDebugText = "hello";
 
-    private List<PlayerController> mPlayer = new List<PlayerController>();      //Keep list of Players in game
-
-	void Awake () {
-		if (CreateSingleton (ref sGM)) {
-			
-		}
-	}
-
-    public  static  void    Msg(string vDebugMsg) {
-        if(DebugOn) {
+    public static void Msg(string vDebugMsg) {
+        if (DebugOn) {
             Debug.Log(vDebugMsg);
         }
     }
+    void ClearDebugText() {
+        mDebugText = "";
+    }
+    static public string DebugText {
+        get {
+            return sGM.mDebugText;
+        }
 
+        set {
+            sGM.mDebugText = value;
+            sGM.Invoke("ClearDebugText", 3f);
+        }
+    }
 
-	//Add player to list of players
-    static  public  void AddPlayer(PlayerController vPC) {
-        if(sGM.mPlayer.Contains(vPC)) {
-            DebugMsg("AddPlayer Error" + vPC.ToString() + " not in player list");
+    
+    #endregion
+
+    #region Singleton
+    private static GM sGM;        //Used to keep singleton reference
+    void Awake() {
+        if (CreateSingleton(ref sGM)) {
+
+        }
+    }
+    #endregion
+
+    #region PlayerManagement
+    private List<PlayerController> mPlayer = new List<PlayerController>();      //Keep list of Players in game
+                                                                                //Add player to list of players
+    static public void AddPlayer(PlayerController vPC) {
+        if (sGM.mPlayer.Contains(vPC)) {
+            DebugMsg("AddPlayer Error" + vPC.ToString() + " already in player list");
             return;         //If already in the list don't add player again
         }
         sGM.mPlayer.Add(vPC);   //Add player
     }
 
-	//Remove player to list of players
+    //Remove player to list of players
     static public void RemovePlayer(PlayerController vPC) {
         if (sGM.mPlayer.Contains(vPC)) {
             sGM.mPlayer.Remove(vPC);   //Remove player
@@ -41,29 +61,36 @@ public class GM : Singleton {
         DebugMsg("RemovePlayer Error" + vPC.ToString() + " not in player list");
     }
 
-	//Get player by index
+    //Get player by index
     static public PlayerController GetPlayer(int vIndex) {
-        if (vIndex<sGM.mPlayer.Count) {
+        if (vIndex < sGM.mPlayer.Count) {
             return sGM.mPlayer[vIndex];
         }
         DebugMsg("GetPlayer Error index " + vIndex + "Out of range");
         return null;
     }
 
-    string mDebugText="hello";
-
-    void    ClearDebugText() {
-        mDebugText = "";
-    }
- 
-    static public string DebugText {
+    static  public  List<PlayerController> PlayerList {
         get {
-            return sGM.mDebugText;
-        }
-
-        set {
-            sGM.mDebugText = value;
-            sGM.Invoke("ClearDebugText",3f);
+            return sGM.mPlayer;
         }
     }
+
+    static public int PlayerCount {
+        get {
+            return sGM.mPlayer.Count;
+        }
+    }
+    #endregion
+
+    #region Helpers
+    static  public  bool IsLast(List<System.Object> vList, System.Object vObject) {   //Check if item is last in list
+        if(vList.Count>1) {     //List needs to be bigger than 1, or its always the last
+            return vList[vList.Count - 1] == vObject;
+        }
+        return false;
+    }
+
+    #endregion
+
 }
