@@ -41,7 +41,7 @@ namespace Multiplayer {
 		public	Transform	BulletSpawn;
 
 		void	DoFire() {	//Process fire command locally
-			if (Input.GetKeyDown (KeyCode.Space)) {
+			if (IC.GetInput(IC.Directions.Fire)>0f) {
 				CmdDoFire ();	//However to bullets are like NPC so tell the server to fire
 			}
 		}

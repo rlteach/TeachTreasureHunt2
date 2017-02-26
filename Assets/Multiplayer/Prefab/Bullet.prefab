@@ -158,7 +158,7 @@ MonoBehaviour:
     i13: 16
     i14: 0
     i15: 61
-  m_ServerOnly: 1
+  m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!135 &135000012056440196
 SphereCollider:
