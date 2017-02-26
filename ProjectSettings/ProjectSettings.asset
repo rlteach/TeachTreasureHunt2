@@ -10,15 +10,15 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: Modulo17
   productName: TeachingTreasureHunt
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenStyle: 0
   m_ShowUnitySplashScreen: 0
   m_VirtualRealitySplashScreen: {fileID: 0}
-  defaultScreenWidth: 800
-  defaultScreenHeight: 600
+  defaultScreenWidth: 640
+  defaultScreenHeight: 480
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_RenderingPath: 1
@@ -30,7 +30,7 @@ PlayerSettings:
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   iosAppInBackgroundBehavior: 0
-  displayResolutionDialog: 2
+  displayResolutionDialog: 0
   iosAllowHTTPDownload: 1
   allowedAutorotateToPortrait: 1
   allowedAutorotateToPortraitUpsideDown: 1
@@ -49,7 +49,7 @@ PlayerSettings:
   usePlayerLog: 1
   bakeCollisionMeshes: 0
   forceSingleInstance: 0
-  resizableWindow: 1
+  resizableWindow: 0
   useMacAppStoreValidation: 0
   gpuSkinning: 0
   graphicsJobs: 0
@@ -182,7 +182,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 0}
+      m_Icon: {fileID: 2800000, guid: b78b9ad5c2bff45dcae4c36ab1472f74, type: 3}
       m_Width: 128
       m_Height: 128
   m_BuildTargetBatching: []

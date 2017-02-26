@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1363494517}
-  m_IndirectSpecularColor: {r: 0.44863725, g: 0.49869132, b: 0.5758858, a: 1}
+  m_IndirectSpecularColor: {r: 0.448637, g: 0.49869084, b: 0.5758855, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 388676165}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -822479833, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d02d8f04f2874439ba33c60999219825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_NetworkPort: 7777
@@ -269,7 +269,7 @@ MonoBehaviour:
   m_PlayerPrefab: {fileID: 1000013748856448, guid: 1a539d2eb343e3349ab080834c235e99,
     type: 2}
   m_AutoCreatePlayer: 1
-  m_PlayerSpawnMethod: 1
+  m_PlayerSpawnMethod: 0
   m_OfflineScene: 
   m_OnlineScene: 
   m_SpawnPrefabs:
@@ -500,7 +500,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
 --- !u!1 &1666141793
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,29 +563,42 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
---- !u!1 &1736305884
+--- !u!1 &1705321885
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 1736305887}
-  - 114: {fileID: 1736305886}
-  - 114: {fileID: 1736305885}
+  - 4: {fileID: 1705321886}
+  - 114: {fileID: 1705321888}
+  - 114: {fileID: 1705321887}
   m_Layer: 0
-  m_Name: ObjectSpawner
+  m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1736305885
+--- !u!4 &1705321886
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1705321885}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.19032195, y: 0.8945202, z: -0.008787155}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+--- !u!114 &1705321887
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1736305884}
+  m_GameObject: {fileID: 1705321885}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7422413610087ad41b34aa7cccef0508, type: 3}
@@ -593,15 +606,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectPrefab:
   - {fileID: 1000013404508470, guid: 7f29ed01543e84d719db68a87f1504e4, type: 2}
-  - {fileID: 1000011395518200, guid: e0377b716420a2c4db3aee4030ecf4d2, type: 2}
   - {fileID: 1000013908177428, guid: 503b874bad70744c091923588103dbec, type: 2}
-  numberOfEnemies: 10
---- !u!114 &1736305886
+  - {fileID: 1000011395518200, guid: e0377b716420a2c4db3aee4030ecf4d2, type: 2}
+  numberOfPickups: 10
+--- !u!114 &1705321888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1736305884}
+  m_GameObject: {fileID: 1705321885}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
@@ -628,19 +641,6 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
---- !u!4 &1736305887
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1736305884}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -3.78}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
 --- !u!1 &1750487773
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,4 +947,4 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6

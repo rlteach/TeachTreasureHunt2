@@ -41,6 +41,21 @@ public class GM : Singleton {       //Derive from Singleton, makes a global stat
     }
     #endregion
 
+
+	#region SpawnManagment
+	ObjectSpawner	mOS;
+
+	public	static	ObjectSpawner OS {
+		get {
+			return	sGM.mOS;
+		}
+		set {
+			sGM.mOS = value;
+		}
+	}
+
+	#endregion
+
     #region PlayerManagement
     private List<PlayerController> mPlayer = new List<PlayerController>();      //Keep list of Players in game
                                                                                 //Add player to list of players

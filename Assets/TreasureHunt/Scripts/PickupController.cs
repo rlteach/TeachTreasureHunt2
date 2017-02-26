@@ -52,4 +52,10 @@ public class PickupController : Entity {
             }
         }
 	}
+
+	protected  override  void OnDestroy() {
+		if(GM.OS!=null) {
+			GM.OS.CmdRemovePickup (gameObject);		//Make sure its removed from the list
+		}
+	}
 }
