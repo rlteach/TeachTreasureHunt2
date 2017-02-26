@@ -56,8 +56,8 @@ GameObject:
   - 136: {fileID: 136000011729616820}
   - 23: {fileID: 23000013350550214}
   - 114: {fileID: 114000013861550162}
-  - 114: {fileID: 114000010227897072}
   - 114: {fileID: 114000013211551580}
+  - 114: {fileID: 114000010890925490}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -86,8 +86,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010185415770}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.45, y: -0, z: 1.02}
-  m_LocalScale: {x: 0.1, y: 1, z: 0.1}
+  m_LocalPosition: {x: 0.375, y: 0, z: 0.428}
+  m_LocalScale: {x: 0.1, y: 0.46250018, z: 0.1}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_Children:
   - {fileID: 4000013693197202}
@@ -178,7 +178,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010185415770}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114000010227897072
+--- !u!114 &114000010890925490
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -189,9 +189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4d2e642c37244b5b84f7b5b959fc09d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 1000013681156594, guid: 5660705075e0f44e6b8aeb483610003d,
-    type: 2}
-  BulletSpawn: {fileID: 4000013693197202}
+  BulletPrefab: {fileID: 0}
+  BulletSpawn: {fileID: 0}
 --- !u!114 &114000013211551580
 MonoBehaviour:
   m_ObjectHideFlags: 1
