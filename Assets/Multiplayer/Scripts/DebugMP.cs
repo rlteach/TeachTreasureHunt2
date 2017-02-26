@@ -4,9 +4,9 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text; //Needed for string builder
-using System.Text.RegularExpressions;
+using System.Net;
 
-namespace Multiplayer {     //Allows different code with the same names be used for different purposes, useful if used with care
+namespace Multiplayer {     //Allows different code with the same names be used for different purposes, useful to split up projects into logical components
 
     public class DebugMP : MonoBehaviour {
 
@@ -15,12 +15,11 @@ namespace Multiplayer {     //Allows different code with the same names be used 
         public float UpdateSpeed=1f;
 
 	    Text	mDebugtext;
-        Coroutine mStatusCoRoutine;
 
 	    // Use this for initialization
 	    void Start () {
 		    mDebugtext = GetComponent<Text> ();
-            mStatusCoRoutine = StartCoroutine(UpdateStatus());      //Show status regularly
+           StartCoroutine(UpdateStatus());      //Show status regularly
         }
 
         IEnumerator UpdateStatus() {
@@ -30,42 +29,53 @@ namespace Multiplayer {     //Allows different code with the same names be used 
                 if (NetworkServer.active) {          //Do not use Network.isServer, its broken
                     if (NetworkClient.active) {
                         tSB.AppendLine("Host");
-                        tSB.AppendLine(Connections);
+                        tSB.AppendLine(ClientConnections);
                     } else {
                         tSB.AppendLine("Server");
-                        tSB.AppendLine(Connections);
+                        tSB.AppendLine(ClientConnections);
                     }
                 } else if (NetworkClient.active) {
                     tSB.AppendLine("Client");
-                }
+					tSB.AppendLine(ServerInfo);
+				} else {
+					tSB.AppendLine("Idle");
+				}
                 mDebugtext.text = tSB.ToString();
                 yield return new WaitForSeconds(UpdateSpeed);
-            } while (true);
+            } while (true);	//Will loop forever
         }
 
-        string Connections {
+		string ServerInfo {	//Get connected server info
+			get {
+				StringBuilder tSB = new StringBuilder();        //Faster than string concat with +
+				tSB.AppendLine(NetworkManager.singleton.client.connection.address);
+				return	tSB.ToString();
+			}
+		}
+
+
+        string ClientConnections {		//Get client connections by IP
             get {
                 StringBuilder tSB = new StringBuilder();        //Faster than string concat with +
                 int tI = 0;
                 foreach (var tConnection in NetworkServer.connections) {
                     if(tConnection!=null) {
-                        tSB.AppendLine(string.Format("{0}-{1}:{2}", ++tI, GetIP4String(tConnection.address), tConnection.isConnected));
+						string	tRemote = GetIPAddress(tConnection.address);
+						tSB.AppendLine(string.Format("{0}-{1}:{2}", ++tI, tRemote, (tConnection.isConnected)?"-C":"-NC"));
                     }
                 }
                 return tSB.ToString();
             }
         }
 
-        string  GetIP4String(string vText) {
-            StringBuilder tSB = new StringBuilder();        //Faster than string concat with +
-            string[] sections = Regex.Split(vText, ":.");
-            for(int tI=0;tI<4;tI++) {
-                tSB.Append(sections[5+tI]);
-                if(tI<3) {
-                    tSB.Append(".");
-                }
-            }
-            return tSB.ToString();
+        string  GetIPAddress(string vText) {		//Messy way to split IP address, but only used for debug
+			char[]	tDemlimiter = { ':', '.' };
+			string[]	tSplit = vText.Split (tDemlimiter);
+			int tCount = (tSplit != null) ? tSplit.Length : 0;
+			if (tCount == 7) {
+				return	string.Format ("{0}.{1}.{2}.{3}", tSplit [3], tSplit [4], tSplit [5], tSplit [6]);
+			}
+			return	"N/A";
         }
     }
 }

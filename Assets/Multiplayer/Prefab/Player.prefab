@@ -35,7 +35,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010610311612}
   - 33: {fileID: 33000013483868118}
-  - 136: {fileID: 136000012362118056}
   - 23: {fileID: 23000011259212164}
   m_Layer: 0
   m_Name: Gun
@@ -189,8 +188,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4d2e642c37244b5b84f7b5b959fc09d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 0}
-  BulletSpawn: {fileID: 0}
+  BulletPrefab: {fileID: 1000013681156594, guid: 5660705075e0f44e6b8aeb483610003d,
+    type: 2}
+  BulletSpawn: {fileID: 4000013693197202}
 --- !u!114 &114000013211551580
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -249,19 +249,6 @@ CapsuleCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011264851310}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136000012362118056
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010185415770}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1

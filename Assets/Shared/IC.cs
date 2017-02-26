@@ -7,8 +7,8 @@ using System.Collections;
 //Adds a static GameController Input module to the Scene
 //Can be attached to a GameObject or will add itself if not
 
-namespace SinglePlayer {
-    public class IC : RL_Helpers.Singleton {
+namespace RL_Helpers {
+    public class IC : Singleton {
 
         public readonly static string[,] sJoySticks = new string[,] {
         {"Joy 1 X","Joy 1 Y"}
