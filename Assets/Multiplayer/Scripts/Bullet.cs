@@ -11,15 +11,13 @@ namespace Multiplayer {
 			}
 		}
 
-		bool	isTarget {		//Return true for valid bullet target
-			get {
-				return	(Type == EType.RemotePlayer || Type == EType.LocalPlayer);
-			}
+		bool	isTarget(Entity vTarget) {		//Return true for valid bullet target
+			return	(vTarget.Type == EType.RemotePlayer || vTarget.Type == EType.LocalPlayer);
 		}
 
 		protected override	void	CollidedWith(Entity vOther, bool vIsTrigger) {
 			base.CollidedWith (vOther, vIsTrigger);		//Print debug
-			if(isTarget) {			//Bullets should only hit player
+			if(isTarget(vOther)) {			//Bullets should only hit player
 				Player	tPlayer=(Player)vOther;		//We know its a player, so cast it
 				Destroy (gameObject);	//Kill bullet
 				tPlayer.TakeHit(1);		//Knock down player health

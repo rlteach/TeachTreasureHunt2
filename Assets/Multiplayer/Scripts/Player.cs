@@ -6,7 +6,9 @@ using RL_Helpers;		//Helper code
 namespace Multiplayer {
     public class Player : Entity {
 
-		HealthBar	mHealthBar;
+
+
+		private	HealthBar	mHealthBar;
 
 		[SyncVar(hook = "OnChangeHealth")]		//Sync Var on Server & local change hook
 		public	int	mHealth;
@@ -17,20 +19,20 @@ namespace Multiplayer {
 			}
 		}
 
-
-		protected override	void	StartLocalEntity() {
-			DB.Message(System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
-			name = "Local Player";
-			mHealthBar = GetComponentInChildren<HealthBar> ();
-			CmdReset();
-			gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;	//Make local player blue
+		protected override	void	OnStartServerEntity() {		//Called when Local Entity is started
+			base.OnStartServerEntity();		//Print Debug
 		}
 
-		protected override	void	StartRemoteEntity() {
-			DB.Message(System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
-			name = "Remote Player";
+		protected override	void	OnStartClientEntity() {		//Called when Local Entity is started
+			base.OnStartClientEntity();		//Print Debug
+			name = "Local Player";
 			mHealthBar = GetComponentInChildren<HealthBar> ();
-			mHealthBar.Health = mHealth;
+		}
+
+		protected override	void	OnIsPlayerEntity() {
+			base.OnIsPlayerEntity();		//Print Debug
+			name = "Remote Player";		//Change name
+			gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;	//Make local player blue
 		}
 
 	    // Process local player, NPC objects processed on server and other players on their clients
@@ -41,7 +43,7 @@ namespace Multiplayer {
 
 		#region Move
 	    void	DoMovePlayer() {		//Move local player, Network Transform component will send this to server
-			float	tRotate = IC.GetInput(IC.Directions.MoveX) *360f*Time.deltaTime;
+			float	tRotate = IC.GetInput(IC.Directions.MoveX) *180*Time.deltaTime;
 			float	tMove = IC.GetInput(IC.Directions.MoveY)*10f*Time.deltaTime;
 		    transform.Rotate(0,tRotate,0);
 		    transform.position+=transform.TransformDirection (Vector3.forward*tMove);
