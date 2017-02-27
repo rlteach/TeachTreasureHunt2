@@ -6,6 +6,11 @@ using RL_Helpers;		//Helper code
 namespace Multiplayer {
     public class Player : Entity {
 
+		HealthBar	mHealthBar;
+
+		[SyncVar(hook = "OnChangeHealth")]		//Sync Var on Server & local change hook
+		public	int	mHealth;
+
 		public override EType Type {
 			get {
 				return	(isLocalPlayer)?EType.LocalPlayer:EType.RemotePlayer;		//Is it a local player or the remote one
@@ -14,6 +19,8 @@ namespace Multiplayer {
 
 		void	Start() {
 			name = ((isLocalPlayer)?"Local Player":"Remote Player");
+			mHealthBar = GetComponentInChildren<HealthBar> ();
+			CmdReset();
 		}
 
 	    public override void OnStartLocalPlayer() {	//Called for local player start, can be used to differenticate local player
@@ -56,6 +63,29 @@ namespace Multiplayer {
 		    tBullet.name = name+"-Bullet";	//Label them
 		    NetworkServer.Spawn(tBullet);	//Tell server to spawn this on all the connected clients
 	    }
+		#endregion
+
+
+		#region  Health
+
+		[Command]
+		public	void	CmdReset() {
+			mHealth = 100;
+		}
+
+		public void TakeHit(int vAmount)
+		{
+			if (isServer) {
+				mHealth -= vAmount;
+				if (mHealth <= 0) {
+					mHealth = 0;
+				}
+			}
+		}
+
+		void	OnChangeHealth(int vNewHealth) {
+			mHealthBar.Health = vNewHealth;
+		}
 		#endregion
 
     }
