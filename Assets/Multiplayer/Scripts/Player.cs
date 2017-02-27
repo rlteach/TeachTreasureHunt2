@@ -17,16 +17,21 @@ namespace Multiplayer {
 			}
 		}
 
-		void	Start() {
-			name = ((isLocalPlayer)?"Local Player":"Remote Player");
+
+		protected override	void	StartLocalEntity() {
+			DB.Message(System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
+			name = "Local Player";
 			mHealthBar = GetComponentInChildren<HealthBar> ();
 			CmdReset();
+			gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;	//Make local player blue
 		}
 
-	    public override void OnStartLocalPlayer() {	//Called for local player start, can be used to differenticate local player
-			base.OnStartLocalPlayer();		//Make bass class process itself
-		    gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;	//Make local player blue
-	    }
+		protected override	void	StartRemoteEntity() {
+			DB.Message(System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
+			name = "Remote Player";
+			mHealthBar = GetComponentInChildren<HealthBar> ();
+			mHealthBar.Health = mHealth;
+		}
 
 	    // Process local player, NPC objects processed on server and other players on their clients
 		public	override	void	ProcessLocalPlayer () {
@@ -80,6 +85,7 @@ namespace Multiplayer {
 				if (mHealth <= 0) {
 					mHealth = 0;
 				}
+				mHealthBar.Health = mHealth;
 			}
 		}
 

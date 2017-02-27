@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using RL_Helpers;
 
-namespace Multiplayer {		//Newworking version of entiry base class
+namespace Multiplayer {		//Networking version of entiy base class
 
 	abstract	public class Entity : NetworkBehaviour {
 
@@ -17,11 +17,22 @@ namespace Multiplayer {		//Newworking version of entiry base class
 
 		abstract	public	EType	Type { get; }	//Get Type must override this
 
-		public override void OnStartLocalPlayer() {	//Called for local player start, can be used to differenticate local player
-			base.OnStartLocalPlayer();
-			DB.Message(System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
+		protected	virtual	void	Start() {
+			if (isLocalPlayer) {
+				StartLocalEntity();
+			} else {
+				StartRemoteEntity();
+			}
 		}
 
+		protected	virtual	void	StartLocalEntity() {
+			DB.Message("Base:" + System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
+		}
+
+		protected	virtual	void	StartRemoteEntity() {
+			DB.Message("Base:" +System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
+		}
+	
 		#region Updates & house keeping
 		void Update () {
 			if (isLocalPlayer) {		//Process Local Player code
