@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class Health : NetworkBehaviour {
+public class Health1 : NetworkBehaviour {
 	
 	public bool destroyOnDeath;
 	public const	int	maxHealth=100;
@@ -35,7 +35,7 @@ public class Health : NetworkBehaviour {
 		if (isLocalPlayer)
 		{
 			currentHealth = 100;
-			gameObject.GetComponent<MovePlayer> ().ResetPlayer ();
+			//gameObject.GetComponent<MovePlayer> ().ResetPlayer ();
 		}
 	}
 

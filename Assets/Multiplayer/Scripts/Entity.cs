@@ -18,26 +18,14 @@ namespace Multiplayer {		//Networking version of entiy base class
 		abstract	public	EType	Type { get; }	//Get Type must override this
 
 		public	override	void	OnStartServer() {
-			OnStartServerEntity ();		//Called when Entity is started on the server
+			DB.Message(GetType().Name +":"+ System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
 		}
 
 		public	override	void	OnStartClient() {
-			OnStartClientEntity();		//Called when Entity is started on the client
+			DB.Message(GetType().Name +":"+ System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
 		}
 
 		public	override	void	OnStartLocalPlayer() {
-			OnIsPlayerEntity ();		//Called after startup when we become a player
-		}
-
-		protected	virtual	void	OnStartServerEntity() {
-			DB.Message(GetType().Name +":"+ System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
-		}
-
-		protected	virtual	void	OnStartClientEntity() {
-			DB.Message(GetType().Name +":"+ System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
-		}
-
-		protected	virtual	void	OnIsPlayerEntity() {
 			DB.Message(GetType().Name +":" +System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		
 		}
 	

@@ -13,7 +13,7 @@ public class HealthBar : MonoBehaviour {
 		}
 	}
 
-	void Start () {
+	void Awake () {
 		RectTransform[] tRT = GetComponentsInChildren<RectTransform> ();
 		if (tRT.Length == 3) {
 			mImageRect = tRT[2];

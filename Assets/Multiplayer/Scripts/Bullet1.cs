@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class Bullet : NetworkBehaviour {
+public class Bullet1 : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -15,7 +15,7 @@ public class Bullet : NetworkBehaviour {
 	}
 
 	void OnTriggerEnter(Collider vOther) {
-		Health tH = vOther.GetComponent<Health> ();
+		Health1 tH = vOther.GetComponent<Health1> ();
 		if (tH != null) {
 			Destroy (gameObject);
 			tH.TakeDamage (15);

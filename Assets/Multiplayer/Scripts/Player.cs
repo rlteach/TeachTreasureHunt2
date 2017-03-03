@@ -19,20 +19,23 @@ namespace Multiplayer {
 			}
 		}
 
-		protected override	void	OnStartServerEntity() {		//Called when Local Entity is started
-			base.OnStartServerEntity();		//Print Debug
+		public override	void	OnStartServer() {		//Called when Server Entity is started
+			base.OnStartServer();		//Print Debug
 		}
 
-		protected override	void	OnStartClientEntity() {		//Called when Local Entity is started
-			base.OnStartClientEntity();		//Print Debug
-			name = "Local Player";
+		public override	void	OnStartClient() {		//Called when Local Entity is started
+			base.OnStartClient();		//Print Debug
+			name = "Remote Player";
 			mHealthBar = GetComponentInChildren<HealthBar> ();
+			mHealthBar.Health = mHealth;		//Reflect Healthbar on host client
+
 		}
 
-		protected override	void	OnIsPlayerEntity() {
-			base.OnIsPlayerEntity();		//Print Debug
-			name = "Remote Player";		//Change name
+		public override	void	OnStartLocalPlayer() {
+			base.OnStartLocalPlayer();		//Print Debug
+			name = "Local Player";		//Change name
 			gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;	//Make local player blue
+			CmdResetHealth();
 		}
 
 	    // Process local player, NPC objects processed on server and other players on their clients
@@ -50,13 +53,13 @@ namespace Multiplayer {
 	    }
 		#endregion
 
-		#region Fire		//First request is handled on client, but its acted on by server using a command
+		#region Fire		//Request is handled on client, but its acted on by server using a command
 		public	GameObject	BulletPrefab;
 		public	Transform	BulletSpawn;
 
 		void	DoFire() {	//Process fire command locally
 			if (IC.GetInput(IC.Directions.Fire)>0f) {
-				CmdDoFire ();	//However to bullets are like NPC so tell the server to fire
+				CmdDoFire ();	//Bullets are like NPC's so tell the server to fire
 			}
 		}
 
@@ -75,8 +78,9 @@ namespace Multiplayer {
 
 		#region  Health
 
+
 		[Command]
-		public	void	CmdReset() {
+		public	void	CmdResetHealth() {
 			mHealth = 100;
 		}
 
@@ -92,6 +96,7 @@ namespace Multiplayer {
 		}
 
 		void	OnChangeHealth(int vNewHealth) {
+			DB.Message(string.Format("{0} {1} Client:{2} Server:{3}",name,System.Reflection.MethodBase.GetCurrentMethod().Name,isClient,isServer));	//Print where we are		
 			mHealthBar.Health = vNewHealth;
 		}
 		#endregion
