@@ -69,9 +69,9 @@ namespace Multiplayer {
 		    var tBullet=Instantiate (BulletPrefab,BulletSpawn.position,BulletSpawn.rotation) as GameObject;	//Make bullet from prefab on server
 		    var	tRB = tBullet.GetComponent<Rigidbody> ();	//Simple physics fire
 		    tRB.velocity = tBullet.transform.forward * 3f;	//Bullet moves forward
-		    Destroy (tBullet, 2f);	//Bullets last 2 seconds
 		    tBullet.name = name+"-Bullet";	//Label them
 		    NetworkServer.Spawn(tBullet);	//Tell server to spawn this on all the connected clients
+			Destroy (tBullet, 2f);	//Bullets last 2 seconds
 	    }
 		#endregion
 

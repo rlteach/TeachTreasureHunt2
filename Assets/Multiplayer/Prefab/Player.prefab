@@ -57,7 +57,7 @@ GameObject:
   - 114: {fileID: 114000013861550162}
   - 114: {fileID: 114000013211551580}
   - 114: {fileID: 114000013749293070}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}

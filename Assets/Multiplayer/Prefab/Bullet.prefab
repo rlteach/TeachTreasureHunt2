@@ -26,7 +26,7 @@ GameObject:
   - 114: {fileID: 114000014035946318}
   - 114: {fileID: 114000010178930410}
   - 114: {fileID: 114000013224168536}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,22 +142,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 86
-    i1: 96
-    i2: 112
-    i3: 80
-    i4: 117
-    i5: 224
-    i6: 244
-    i7: 78
-    i8: 107
-    i9: 138
-    i10: 235
-    i11: 72
-    i12: 54
-    i13: 16
-    i14: 0
-    i15: 61
+    i0: 153
+    i1: 140
+    i2: 182
+    i3: 93
+    i4: 158
+    i5: 52
+    i6: 196
+    i7: 84
+    i8: 218
+    i9: 188
+    i10: 205
+    i11: 64
+    i12: 220
+    i13: 2
+    i14: 55
+    i15: 214
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!135 &135000012056440196
