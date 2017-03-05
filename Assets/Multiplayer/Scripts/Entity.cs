@@ -13,9 +13,10 @@ namespace Multiplayer {		//Networking version of entiy base class
 			,LocalPlayer
 			,RemotePlayer
 			,Bullet
-		}
+            ,Pickup
+        }
 
-		abstract	public	EType	Type { get; }	//Get Type must override this
+        abstract	public	EType	Type { get; }	//Get Type must override this
 
 		public	override	void	OnStartServer() {
 			DB.Message(GetType().Name +":"+ System.Reflection.MethodBase.GetCurrentMethod().Name);	//Print where we are		

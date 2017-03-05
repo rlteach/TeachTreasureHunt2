@@ -4,16 +4,13 @@ using UnityEngine.Networking;
 using RL_Helpers;		//Helper code
 
 namespace Multiplayer {
+
     public class PlayerController : Entity {
 
+        Cooldown mCoolDown=new Cooldown(0.5f);
 
-		private	CharacterController	mCC;
-		private	HealthBar	mHealthBar;
-
-		[SyncVar(hook = "OnChangeHealth")]		//Sync Var on Server & local change hook
-		public	int	mHealth;
-
-		public override EType Type {
+        #region Startup
+        public override EType Type {
 			get {
 				return	(isLocalPlayer)?EType.LocalPlayer:EType.RemotePlayer;		//Is it a local player or the remote one
 			}
@@ -28,20 +25,23 @@ namespace Multiplayer {
 			name = "Remote Player";
 			mHealthBar = GetComponentInChildren<HealthBar> ();
 			mHealthBar.Health = mHealth;		//Reflect Healthbar on host client
+            mInventoryItems.Callback = OnInventoryChanged;
+        }
 
-		}
-
-		public override	void	OnStartLocalPlayer() {
+        public override	void	OnStartLocalPlayer() {
 			base.OnStartLocalPlayer();		//Print Debug
 			name = "Local Player";		//Change name
 			mCC=GetComponent<CharacterController>();
 			gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;	//Make local player blue
 			CmdResetHealth();
 			StartCameraTrack ();
+            GM.LocalPlayer = this;
 		}
 
-		#region Tracking
-		public	Transform	CameraOffset;
+        #endregion
+
+        #region Tracking
+        public Transform	CameraOffset;       //If local player set camera to track player
 
 		void	StartCameraTrack() {
 			TrackLocalPlayer	tTrack = Camera.main.gameObject.GetComponent<TrackLocalPlayer> ();
@@ -57,9 +57,11 @@ namespace Multiplayer {
 			DoFire ();	//Process fire request
 		}
 
-		#region Move
-		Vector3	mMoveDirection=Vector3.zero;
-		public	float	MoveSpeed = 10f;
+        #region Move
+        private CharacterController mCC;
+
+        Vector3 mMoveDirection =Vector3.zero;
+		public	float	MoveSpeed = 3f;
 		public	float	JumpHeight = 10f;
 
 	    void	DoMovePlayer() {		//Move local player, Network Transform component will send this to server
@@ -84,7 +86,7 @@ namespace Multiplayer {
 		public	Transform	BulletSpawn;
 
 		void	DoFire() {	//Process fire command locally
-			if (IC.GetInput(IC.Directions.Fire)>0f) {
+			if (mCoolDown.Cool(Time.deltaTime) &&  IC.GetInput(IC.Directions.Fire)>0f) {
 				CmdDoFire ();	//Bullets are like NPC's so tell the server to fire
 			}
 		}
@@ -94,17 +96,22 @@ namespace Multiplayer {
 	    void	CmdDoFire() {	//Note Cmd prefix, needed for remote command
 			var tBulletGO=Instantiate (BulletPrefab) as GameObject;	//Make bullet from prefab on server
 			var tBullet=tBulletGO.GetComponent<Bullet>();
+            tBullet.PC = this;                  //Link back to owner
 		    tBulletGO.name = name+"-Bullet";	//Label them
-			tBullet.PC=this;		//Link Server bullet to server player
-		    NetworkServer.Spawn(tBulletGO);	//Tell server to spawn this on all the connected clients
-	    }
-		#endregion
+            NetworkServer.Spawn(tBulletGO); //Tell server to spawn this on all the connected clients
+        }
+        #endregion
 
 
-		#region  Health
+        #region  Health
 
 
-		[Command]
+        private HealthBar mHealthBar;
+
+        [SyncVar(hook = "OnChangeHealth")]      //Sync Var on Server & local change hook
+        public int mHealth;
+
+        [Command]
 		public	void	CmdResetHealth() {
 			mHealth = 100;
 		}
@@ -115,17 +122,50 @@ namespace Multiplayer {
 				mHealth -= vAmount;
 				if (mHealth <= 0) {
 					mHealth = 0;
-				}
+                }
 				mHealthBar.Health = mHealth;
-			}
-		}
+            }
+        }
 
 		void	OnChangeHealth(int vNewHealth) {
 			DB.Message(string.Format("{0} {1} Client:{2} Server:{3}",name,System.Reflection.MethodBase.GetCurrentMethod().Name,isClient,isServer));	//Print where we are		
 			mHealthBar.Health = vNewHealth;
 		}
-		#endregion
+        #endregion
+
+        protected override void CollidedWith(Entity vOther, bool vIsTrigger) {      //Player Collides with Pickups
+            if(vOther.Type==EType.Pickup) {
+                int tType = vOther.GetComponent<Pickup>().PickupType;
+                Destroy(vOther.gameObject);
+                mInventoryItems.Add(tType);
+            }
+        }
+
+
+        #region Inventory
+        public SyncListInt mInventoryItems = new SyncListInt();        //Make Syncronised list of items picked up;
+
+        private void OnInventoryChanged(SyncListInt.Operation op, int index) {
+            Debug.Log("Items changed " + op);
+            if(GM.InventoryPanel!=null) {
+                GM.InventoryPanel.ShowUpdated();
+            }
+        }
+
+        public  int CountInventoryItemsOfType(int vItem) {
+            int tItems = 0;
+
+            foreach(int tItem in mInventoryItems) {
+                if(tItem==vItem) {
+                    tItems++;
+                }
+            }
+            return  tItems;
+        }
 
     }
+
+    #endregion
+
 }
 

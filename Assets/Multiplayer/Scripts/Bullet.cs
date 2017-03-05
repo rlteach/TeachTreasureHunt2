@@ -5,13 +5,10 @@ using UnityEngine.Networking;
 namespace Multiplayer {
     public class Bullet : Entity {
 
+        [HideInInspector]
+        public PlayerController PC;
 
-		public	float	TimeToLive=2f;
-		public	float	Speed=15f;
-
-		Rigidbody	mRB;
-
-		public	PlayerController	PC;
+        public  float Speed=20f;
 
 		public override EType Type {
 			get {
@@ -20,18 +17,22 @@ namespace Multiplayer {
 		}
 
 		bool	isTarget(Entity vTarget) {		//Return true for valid bullet target
-			return	(vTarget.Type == EType.RemotePlayer);
+			return	(vTarget.Type == EType.RemotePlayer || vTarget.Type == EType.LocalPlayer);
 		}
 
 		public	override	void	OnStartServer() {
-			mRB = GetComponent<Rigidbody> ();
-			transform.position = PC.BulletSpawn.position;
-			transform.rotation = PC.BulletSpawn.rotation;
-			mRB.velocity = transform.forward * Speed;	//Bullet moves forward
-			Destroy (gameObject, TimeToLive);	//Bullets last limited time
-		}
+            Rigidbody tRB = GetComponent<Rigidbody>();
+            Collider tCOL = GetComponent<Collider>();
+            MeshRenderer tMesh = GetComponent<MeshRenderer>();
+            tRB.velocity = PC.transform.forward * 10f;
+            transform.position = PC.BulletSpawn.position;
+            transform.rotation = PC.BulletSpawn.rotation;
+            tMesh.enabled = true;
+            tCOL.enabled = true;
+            Destroy(gameObject, 2f);    //Bullets last limited time
+        }
 
-		public override	void	OnStartClient() {		//Ignore base startup code
+        public override	void	OnStartClient() {		//Ignore base startup code
 		}
 
 
