@@ -5,6 +5,14 @@ using UnityEngine.Networking;
 namespace Multiplayer {
     public class Bullet : Entity {
 
+
+		public	float	TimeToLive=2f;
+		public	float	Speed=15f;
+
+		Rigidbody	mRB;
+
+		public	PlayerController	PC;
+
 		public override EType Type {
 			get {
 				return	EType.Bullet;
@@ -12,18 +20,26 @@ namespace Multiplayer {
 		}
 
 		bool	isTarget(Entity vTarget) {		//Return true for valid bullet target
-			return	(vTarget.Type == EType.RemotePlayer || vTarget.Type == EType.LocalPlayer);
+			return	(vTarget.Type == EType.RemotePlayer);
 		}
 
-		public override	void	OnStartClient() {		//Dont do anything, used to ignore base class code
+		public	override	void	OnStartServer() {
+			mRB = GetComponent<Rigidbody> ();
+			transform.position = PC.BulletSpawn.position;
+			transform.rotation = PC.BulletSpawn.rotation;
+			mRB.velocity = transform.forward * Speed;	//Bullet moves forward
+			Destroy (gameObject, TimeToLive);	//Bullets last limited time
 		}
+
+		public override	void	OnStartClient() {		//Ignore base startup code
+		}
+
+
 		protected override	void	CollidedWith(Entity vOther, bool vIsTrigger) {
-			if (isServer) {		//Should only run on server, to ensure local clients dont act on this
-				if (isTarget (vOther)) {			//Bullets should only hit player
-					Player	tPlayer = (Player)vOther;		//We know its a player, so cast it
-					Destroy (gameObject);	//Kill bullet
-					tPlayer.TakeHit (1);		//Knock down player health
-				}
+			if (isTarget (vOther)) {			//Bullets should only hit player
+				PlayerController	tPlayer = (PlayerController)vOther;		//We know its a player, so cast it
+				Destroy (gameObject);	//Kill bullet
+				tPlayer.TakeHit (1);		//Knock down player health
 			}
 		}
     }

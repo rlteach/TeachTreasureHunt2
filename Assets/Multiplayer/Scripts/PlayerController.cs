@@ -4,10 +4,10 @@ using UnityEngine.Networking;
 using RL_Helpers;		//Helper code
 
 namespace Multiplayer {
-    public class Player : Entity {
+    public class PlayerController : Entity {
 
 
-
+		private	CharacterController	mCC;
 		private	HealthBar	mHealthBar;
 
 		[SyncVar(hook = "OnChangeHealth")]		//Sync Var on Server & local change hook
@@ -34,9 +34,22 @@ namespace Multiplayer {
 		public override	void	OnStartLocalPlayer() {
 			base.OnStartLocalPlayer();		//Print Debug
 			name = "Local Player";		//Change name
+			mCC=GetComponent<CharacterController>();
 			gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;	//Make local player blue
 			CmdResetHealth();
+			StartCameraTrack ();
 		}
+
+		#region Tracking
+		public	Transform	CameraOffset;
+
+		void	StartCameraTrack() {
+			TrackLocalPlayer	tTrack = Camera.main.gameObject.GetComponent<TrackLocalPlayer> ();
+			if (tTrack != null) {
+				tTrack.LocalPlayer = this;
+			}
+		}
+		#endregion
 
 	    // Process local player, NPC objects processed on server and other players on their clients
 		public	override	void	ProcessLocalPlayer () {
@@ -45,11 +58,24 @@ namespace Multiplayer {
 		}
 
 		#region Move
+		Vector3	mMoveDirection=Vector3.zero;
+		public	float	MoveSpeed = 10f;
+		public	float	JumpHeight = 10f;
+
 	    void	DoMovePlayer() {		//Move local player, Network Transform component will send this to server
-			float	tRotate = IC.GetInput(IC.Directions.MoveX) *180*Time.deltaTime;
-			float	tMove = IC.GetInput(IC.Directions.MoveY)*10f*Time.deltaTime;
-		    transform.Rotate(0,tRotate,0);
-		    transform.position+=transform.TransformDirection (Vector3.forward*tMove);
+			if (mCC.isGrounded) {
+				transform.Rotate(0, IC.GetInput(IC.Directions.MoveX), 0);
+				mMoveDirection.x = 0f;
+				mMoveDirection.y = 0f;
+				mMoveDirection.z = IC.GetInput(IC.Directions.MoveY);
+				mMoveDirection = transform.TransformDirection(mMoveDirection);      //Move in direction character is facing
+				mMoveDirection *= MoveSpeed;
+				if (IC.GetInput(IC.Directions.Jump) > 0f) {
+					mMoveDirection.y = JumpHeight;        //Jump
+				}
+			}
+			mMoveDirection.y += Physics.gravity.y * Time.deltaTime;
+			mCC.Move(mMoveDirection * Time.deltaTime);
 	    }
 		#endregion
 
@@ -66,12 +92,11 @@ namespace Multiplayer {
 		//Run this code remotely on the server
 	    [Command]	//Marks this as a server command
 	    void	CmdDoFire() {	//Note Cmd prefix, needed for remote command
-		    var tBullet=Instantiate (BulletPrefab,BulletSpawn.position,BulletSpawn.rotation) as GameObject;	//Make bullet from prefab on server
-		    var	tRB = tBullet.GetComponent<Rigidbody> ();	//Simple physics fire
-		    tRB.velocity = tBullet.transform.forward * 3f;	//Bullet moves forward
-		    tBullet.name = name+"-Bullet";	//Label them
-		    NetworkServer.Spawn(tBullet);	//Tell server to spawn this on all the connected clients
-			Destroy (tBullet, 2f);	//Bullets last 2 seconds
+			var tBulletGO=Instantiate (BulletPrefab) as GameObject;	//Make bullet from prefab on server
+			var tBullet=tBulletGO.GetComponent<Bullet>();
+		    tBulletGO.name = name+"-Bullet";	//Label them
+			tBullet.PC=this;		//Link Server bullet to server player
+		    NetworkServer.Spawn(tBulletGO);	//Tell server to spawn this on all the connected clients
 	    }
 		#endregion
 

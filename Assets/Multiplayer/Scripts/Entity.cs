@@ -53,12 +53,16 @@ namespace Multiplayer {		//Networking version of entiy base class
 
 		#region Interaction		//Handle interactions such as collisions & triggers
 
-		void	OnTriggerEnter(Collider vOther) {		//Simple wrapper to manage Unity 2 versions of collisions
-			ProcessEntityCollision (vOther.gameObject,true);
+		void	OnTriggerEnter(Collider vOther) {		//Simple wrapper to manage Unity two versions of collisions
+			if (isServer) {
+				ProcessEntityCollision (vOther.gameObject, true);
+			}
 		}
 
 		void 	OnCollisionEnter(Collision vOther) {
-			ProcessEntityCollision (vOther.gameObject,false);
+			if (isServer) {
+				ProcessEntityCollision (vOther.gameObject, false);
+			}
 		}
 
 		void	ProcessEntityCollision(GameObject vGO,bool vIsTrigger) {
