@@ -65,19 +65,19 @@ namespace Multiplayer {
 		public	float	JumpHeight = 10f;
 
 	    void	DoMovePlayer() {		//Move local player, Network Transform component will send this to server
-			if (mCC.isGrounded) {
-				transform.Rotate(0, IC.GetInput(IC.Directions.MoveX), 0);
+			if (mCC.isGrounded&& mHealth>0) {
+				transform.Rotate (0, IC.GetInput (IC.Directions.MoveX), 0);
 				mMoveDirection.x = 0f;
 				mMoveDirection.y = 0f;
-				mMoveDirection.z = IC.GetInput(IC.Directions.MoveY);
-				mMoveDirection = transform.TransformDirection(mMoveDirection);      //Move in direction character is facing
+				mMoveDirection.z = IC.GetInput (IC.Directions.MoveY);
+				mMoveDirection = transform.TransformDirection (mMoveDirection);      //Move in direction character is facing
 				mMoveDirection *= MoveSpeed;
-				if (IC.GetInput(IC.Directions.Jump) > 0f) {
+				if (IC.GetInput (IC.Directions.Jump) > 0f) {
 					mMoveDirection.y = JumpHeight;        //Jump
 				}
 			}
 			mMoveDirection.y += Physics.gravity.y * Time.deltaTime;
-			mCC.Move(mMoveDirection * Time.deltaTime);
+			mCC.Move (mMoveDirection * Time.deltaTime);
 	    }
 		#endregion
 
@@ -116,20 +116,32 @@ namespace Multiplayer {
 			mHealth = 100;
 		}
 
+		[Command]
+		public	void	CmdResetHealthAfter() {
+			StartCoroutine (ResetHealthAfter(5f));
+		}
+
+		IEnumerator	ResetHealthAfter(float vTime) {
+			yield	return		new WaitForSeconds(vTime);
+			mHealth = 100;
+		}
+
 		public void TakeHit(int vAmount)
 		{
 			if (isServer) {
 				mHealth -= vAmount;
 				if (mHealth <= 0) {
 					mHealth = 0;
+					CmdResetHealthAfter ();	//Delay Health reset
                 }
 				mHealthBar.Health = mHealth;
             }
         }
 
 		void	OnChangeHealth(int vNewHealth) {
-			DB.Message(string.Format("{0} {1} Client:{2} Server:{3}",name,System.Reflection.MethodBase.GetCurrentMethod().Name,isClient,isServer));	//Print where we are		
+			mHealth = vNewHealth;		//This was missing and caused the bug, as the UpdateCallback changed the healthbar, but not the underlying local variable
 			mHealthBar.Health = vNewHealth;
+			DB.Message(string.Format("{0} {1} Client:{2} Server:{3}",name,System.Reflection.MethodBase.GetCurrentMethod().Name,isClient,isServer));	//Print where we are		
 		}
         #endregion
 

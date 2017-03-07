@@ -40,7 +40,7 @@ namespace Multiplayer {
 			if (isTarget (vOther)) {			//Bullets should only hit player
 				PlayerController	tPlayer = (PlayerController)vOther;		//We know its a player, so cast it
 				Destroy (gameObject);	//Kill bullet
-				tPlayer.TakeHit (1);		//Knock down player health
+				tPlayer.TakeHit (25);		//Knock down player health
 			}
 		}
     }
