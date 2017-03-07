@@ -351,7 +351,7 @@ GameObject:
   - 114: {fileID: 417229896}
   - 114: {fileID: 417229895}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
